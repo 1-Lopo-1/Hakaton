@@ -1,8 +1,9 @@
-import sys
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap, QColor
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QComboBox, QVBoxLayout, QFrame, QHBoxLayout, \
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QComboBox, QVBoxLayout, QFrame, QHBoxLayout, \
     QCheckBox, QProgressBar, QGraphicsDropShadowEffect
+
+from support import Support
 
 
 class ToggleSwitchMainWin(QFrame):
@@ -662,6 +663,8 @@ class WorkWindow(QWidget):
         # Устанавливаем координаты (справа от центральной иконки на 120px)
         self.icon_right.move(self.icon_center.x() + self.icon_center.width() + 120, 20)
 
+        self.icon_right.mousePressEvent = self.open_new_window_sup  # Указываем метод для обработки
+
         # Текст под правой иконкой
         self.support_text = QLabel("Поддержка", self)
         self.support_text.setAlignment(Qt.AlignCenter)
@@ -785,3 +788,9 @@ class WorkWindow(QWidget):
         self.popup_window = PopupWindow()
         self.popup_window.button_clicked.connect(self.update_combo_box_sub)
         self.popup_window.show()
+
+    def open_new_window_sup(self, event):
+        if not hasattr(self, 'support_window') or self.support_window is None:
+            self.support_window = Support()  # Создаем объект окна поддержки
+        self.support_window.show()  # Показываем окно поддержки
+        self.close()

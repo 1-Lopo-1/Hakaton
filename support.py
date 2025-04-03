@@ -1,7 +1,6 @@
-import sys
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QComboBox, QVBoxLayout, QFrame, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QLabel
 
 
 class Support(QWidget):
