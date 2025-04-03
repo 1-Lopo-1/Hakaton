@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QComboBox, QVBoxLayout, QFrame, QHBoxLayout
 
+from support import Support
 from work_window import WorkWindow
 
 
@@ -207,7 +208,7 @@ class MainWindow(QWidget):
 
         self.text_convert.move(40, self.height() - self.text_convert.height() - 100)
 
-        ## Создаем линию с изображением
+        # Создаем линию с изображением
         line3 = QLabel(self)
         ico_line3 = QPixmap("png/line.png")  # Указываем путь к изображению линии
         line3.setPixmap(ico_line3)
@@ -346,6 +347,8 @@ class MainWindow(QWidget):
         # Устанавливаем координаты (справа от центральной иконки на 120px)
         self.icon_right.move(self.icon_center.x() + self.icon_center.width() + 120, 20)
 
+        self.icon_right.mousePressEvent = self.open_new_window_sup  # Указываем метод для обработки
+
         # Текст под правой иконкой
         self.support_text = QLabel("Поддержка", self)
         self.support_text.setAlignment(Qt.AlignCenter)
@@ -420,6 +423,12 @@ class MainWindow(QWidget):
         if current_index == -1:
             self.video_combo_box.addItem(text)
         self.video_combo_box.setCurrentText(text)
+
+    def open_new_window_sup(self, event):
+        if not hasattr(self, 'support_window') or self.support_window is None:
+            self.support_window = Support()  # Создаем объект окна поддержки
+        self.support_window.show()  # Показываем окно поддержки
+        self.close()
 
 
 app = QApplication(sys.argv)

@@ -1,8 +1,8 @@
 import sys
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QColor
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QComboBox, QVBoxLayout, QFrame, QHBoxLayout, \
-    QCheckBox, QProgressBar
+    QCheckBox, QProgressBar, QGraphicsDropShadowEffect
 
 
 class ToggleSwitchMainWin(QFrame):
@@ -204,6 +204,7 @@ class WorkWindow(QWidget):
                 border-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #72B7FF, stop:1 #CA59FF);
                 font-size: 18px;
                 color: #333333;
+                 padding-left: 10px; /* Внутренний отступ */
             }
             QComboBox::drop-down {
                 border: none;
@@ -374,6 +375,28 @@ class WorkWindow(QWidget):
         self.icon_label_small.setFixedSize(220, 80)  # Уменьшаем в два раза
         self.icon_label_small.move(self.icon_label.x() + self.icon_label.width() + 10, 330)  # 10px отступ вправо
 
+        # Новая иконка справа от self.icon_label_small
+        self.icon_label_extra = QLabel(self)
+        self.icon_label_extra.setPixmap(QPixmap("png/error.png"))  # Указываем путь к дополнительной иконке
+        self.icon_label_extra.setScaledContents(True)
+        self.icon_label_extra.setFixedSize(30, 30)  # Размер дополнительной иконки
+        self.icon_label_extra.move(self.icon_label_small.x() + self.icon_label_small.width() + 10,
+                                   380)  # Отступ 10px вправо
+
+        # Скрываем иконку
+        self.icon_label_extra.setVisible(False)
+
+        self.text_label = QLabel("Название", self)
+        self.text_label.setStyleSheet("""
+            QLabel {
+                font-size: 16px;
+                color: #333333;
+                padding-left: 10px;
+            }
+        """)
+        self.text_label.move(self.icon_label.x() + self.icon_label.width() ,
+                             self.icon_label.y() + 50)  # Размещение справа
+
         # Первая иконка
         self.icon1 = QLabel(self)
         self.icon1.setPixmap(QPixmap("png/type_video.png"))  # Указываем путь к первой иконке
@@ -484,6 +507,26 @@ class WorkWindow(QWidget):
         self.icon_label_right.move(self.progress_bar.x() + self.progress_bar.width() + 60,
                                    250)  # 60px отступ вправо от прогресс-бара
 
+        # Картинка справа от прогресс-бара
+        self.icon_label_right = QLabel(self)
+        self.icon_label_right.setPixmap(QPixmap("png/frame_video.png"))  # Указываем путь к картинке
+        self.icon_label_right.setScaledContents(True)
+        self.icon_label_right.setFixedSize(250, 160)  # Размер картинки
+        self.icon_label_right.move(self.progress_bar.x() + self.progress_bar.width() + 60,
+                                   250)  # 60px отступ вправо от прогресс-бара
+
+        # Текст справа от картинки
+        self.text_label_right = QLabel("Название", self)
+        self.text_label_right.setStyleSheet("""
+            QLabel {
+                font-size: 16px;
+                color: #333333;
+                padding-left: 10px;
+            }
+        """)
+        self.text_label_right.move(self.icon_label_right.x() + self.icon_label_right.width(),
+                                   self.icon_label_right.y() + 50)  # Размещение справа от второй картинки
+
         # Создаем второй контейнер размером в половину
         self.icon_label_half_right = QLabel(self)
         self.icon_label_half_right.setPixmap(QPixmap("png/frame_video.png"))  # Указываем путь к картинке
@@ -491,6 +534,39 @@ class WorkWindow(QWidget):
         self.icon_label_half_right.setFixedSize(220, 80)  # Размер в два раза меньше
         self.icon_label_half_right.move(self.icon_label_right.x() + self.icon_label_right.width() + 10,
                                         330)  # 10px отступ вправо
+
+        self.gradient_button = QPushButton("Конвертировать", self)
+        self.gradient_button.setFixedSize(185, 58)  # Размер кнопки
+
+        # Устанавливаем стили для кнопки
+        self.gradient_button.setStyleSheet("""
+            QPushButton {
+                background-color: white;
+                border: 3px solid;
+                border-radius: 16px;
+                border-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #72B7FF, stop:1 #CA59FF);
+                font-size: 16px;
+                color: #333333;
+                padding: 5px;
+            }
+            QPushButton:hover {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #72B7FF, stop:1 #CA59FF);
+                color: white;
+            }
+        """)
+
+        # Добавляем эффект наружной тени, смещенной влево
+        shadow_effect = QGraphicsDropShadowEffect(self.gradient_button)
+        shadow_effect.setBlurRadius(10)  # Размытие тени
+        shadow_effect.setXOffset(-5)  # Смещение тени ВЛЕВО
+        shadow_effect.setYOffset(5)  # Смещение тени ВНИЗ
+        shadow_effect.setColor(QColor(0, 0, 0, 100))  # Цвет тени (черный с прозрачностью)
+
+        self.gradient_button.setGraphicsEffect(shadow_effect)
+
+        # Размещаем кнопку справа от icon_label_half_right с отступом 10px
+        self.gradient_button.move(self.icon_label_half_right.x() + self.icon_label_half_right.width() + 30,
+                                  self.icon_label_half_right.y() + (self.icon_label_half_right.height() - 140) // 2)
 
         # Первая иконка (справа)
         self.icon1_half_right = QLabel(self)
@@ -626,6 +702,44 @@ class WorkWindow(QWidget):
         """)
         self.output_text.move(185, self.height() - self.output_text.height() - 31)
 
+        # Создаем новый QComboBox справа сверху
+        self.video_combo_box_top_right = QComboBox(self)
+        self.video_combo_box_top_right.addItem("mp4")
+        self.video_combo_box_top_right.setStyleSheet(self.video_combo_box.styleSheet())
+
+        # Размещаем его в правом верхнем углу
+        self.video_combo_box_top_right.move(self.width() - self.video_combo_box_top_right.width() - 30, 30)
+
+        self.video_combo_box_top_right.setFixedSize(105, 28)
+
+        # Перемещаем под icon_label_half_right (с небольшим отступом)
+        self.video_combo_box_top_right.move(self.icon_label_half_right.x() + 10,
+                                            self.icon_label_half_right.y() + self.icon_label_half_right.height() + 10)
+
+        self.video_combo_box_top_right.setStyleSheet("""
+            QComboBox {
+                width: 105px;
+                height: 28px;
+                background-color: white;
+                border: 1px solid;
+                border-radius: 14px;
+                border-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #72B7FF, stop:1 #CA59FF);
+                font-size: 14px;
+                color: #333333;
+                padding-left: 10px; /* Внутренний отступ */
+            }
+            QComboBox::drop-down {
+                border: none;
+            }
+            QComboBox QAbstractItemView {
+                border: 1px solid #72B7FF;
+                selection-background-color: #72B7FF;
+            }
+        """)
+
+        # Привязываем открытие popup-окна по клику
+        self.video_combo_box_top_right.mousePressEvent = lambda event: self.open_popup_window_sub("top_right")
+
     def open_new_window(self, event):
         self.new_window = WorkWindow()  # Создаем объект нового окна
         self.new_window.show()  # Показываем новое окно
@@ -661,3 +775,13 @@ class WorkWindow(QWidget):
             self.video_combo_box.addItem(text)
         self.video_combo_box.setCurrentText(text)
 
+    def update_combo_box_sub(self, text):
+        current_index = self.video_combo_box_top_right.findText(text)
+        if current_index == -1:
+            self.video_combo_box_top_right.addItem(text)
+        self.video_combo_box_top_right.setCurrentText(text)
+
+    def open_popup_window_sub(self, event):
+        self.popup_window = PopupWindow()
+        self.popup_window.button_clicked.connect(self.update_combo_box_sub)
+        self.popup_window.show()
